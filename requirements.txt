@@ -1,0 +1,10 @@
+# pygame, numpy and evdev come from apt (python3-pygame python3-numpy python3-evdev)
+# and are visible here because the venv uses --system-site-packages.
+adafruit-blinka
+# Pinned: sensor/adafruit.py calls the library's private frame helpers to get
+# die temperature, Vdd and emissivity. Bump only after checking read_frame() still works.
+adafruit-circuitpython-mlx90640==1.3.9
+# Needed only to run Adafruit's PiTFT installer from this venv.
+adafruit-python-shell
+click
+# Development only (off-device tests):  pip install pytest && python -m pytest tests/
