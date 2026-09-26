@@ -423,3 +423,13 @@ def test_redraw_is_fast(make_app):
         for _ in range(10):
             a.draw()
         assert (time.perf_counter() - t) / 10 < 0.05, name
+
+
+def test_idle_screen_is_repainted(make_app, monkeypatch):
+    """Anything else that draws on the panel (kernel console) gets painted over within REPAINT_S."""
+    a = make_app()
+    clock = [1000.0]
+    monkeypatch.setattr(app_mod.time, "monotonic", lambda: clock[0])
+    monkeypatch.setattr(app_mod.time, "sleep", lambda s: clock.__setitem__(0, clock[0] + max(s, 0.05)))
+    a.run(exit_after=app_mod.REPAINT_S * 2 + 1)
+    assert a.display.presented >= 3      # first draw + at least two idle repaints

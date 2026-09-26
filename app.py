@@ -15,6 +15,7 @@ from ui.settings import SettingsScreen
 
 UI_HZ = 20
 DEBOUNCE_S = 0.15
+REPAINT_S = 5.0          # re-send the frame even when idle, in case anything else drew on the panel
 TAP_SLOP = 12            # px a resistive tap may wander and still count for its button
 MIN_AUTO_SPAN = 0.5      # degC; stops a uniform wall dividing by ~zero
 SNAP_DIR = os.path.expanduser("~/thermalcam/snapshots")
@@ -231,6 +232,7 @@ class App:
     def run(self, exit_after=0.0, screenshot=None):
         deadline = time.monotonic() + exit_after if exit_after else None
         period = 1.0 / UI_HZ
+        last_present = 0.0
         while True:
             self.now = time.monotonic()
             for ev in self.display.poll():
@@ -241,6 +243,10 @@ class App:
                 self.dirty = False
                 self.draw()
                 self.display.present(self.canvas)
+                last_present = self.now
+            elif self.now - last_present >= REPAINT_S:
+                self.display.present(self.canvas)
+                last_present = self.now
             if deadline and self.now > deadline:
                 if screenshot:
                     self.draw()

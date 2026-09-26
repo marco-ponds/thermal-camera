@@ -147,6 +147,8 @@ vcgencmd get_throttled                # anything but 0x0 means undervoltage: use
 |---|---|
 | "SENSOR NOT FOUND — RETRYING" on the image | Check the four sensor wires and run `i2cdetect -y 1`. The app reconnects on its own once the sensor answers. |
 | Taps land in the wrong place | `sudo systemctl stop thermalcam && .venv/bin/python main.py --calibrate`, then `sudo systemctl start thermalcam` |
+| Boot/terminal text appears over the Live view | The service unbinds the text console before it starts. If you installed before this fix: `git pull && SKIP_PITFT=1 ./setup.sh && sudo reboot` |
+| No calibration crosses, taps do nothing | The touchscreen driver isn't loaded. `setup.sh` now loads `stmpe_ts` at boot; on an older install run `sudo modprobe stmpe_ts && echo stmpe_ts \| sudo tee /etc/modules-load.d/stmpe-ts.conf && sudo systemctl restart thermalcam`. Check with `grep -i -A4 stmpe /proc/bus/input/devices`. |
 | Picture upside down | `PITFT_ROTATION=270 ./setup.sh`, then reboot |
 | Picture mirrored | Set `"flip_h": false` in the config |
 | Blank screen, service keeps restarting | Check `journalctl -u thermalcam`. "No 480x320 framebuffer" means the PiTFT driver didn't load; run `./setup.sh` again. |

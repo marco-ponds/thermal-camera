@@ -2,6 +2,7 @@
 # One-shot Pi setup (Raspberry Pi OS Lite, 32-bit). Run from this directory:  ./setup.sh
 #   1. apt packages        2. venv + pip packages
 #   3. PiTFT driver        (Adafruit installer in "drivers" mode: no console, no HDMI mirror)
+#      + touchscreen driver (stmpe_ts, loaded at every boot)
 #   4. I2C on + bus speed  5. systemd service so the camera starts at boot
 # Env overrides:
 #   PITFT_ROTATION=90|270  landscape either way up (default 90)
@@ -31,6 +32,12 @@ if [ -z "${SKIP_PITFT:-}" ]; then
   (cd /tmp/pitft-installer && sudo -E env PATH="$DIR/.venv/bin:$PATH" python3 adafruit-pitft.py \
       --display=35r --rotation="$ROTATION" --install-type=drivers --reboot=no)
 fi
+
+echo ">> touchscreen driver"
+# The PiTFT's STMPE610 probes, but its touchscreen part (stmpe_ts) isn't
+# loaded automatically, so there's no touch input device. Load it on every boot.
+echo stmpe_ts | sudo tee /etc/modules-load.d/stmpe-ts.conf >/dev/null
+sudo modprobe stmpe_ts || echo "   (stmpe_ts not loaded now; it will load after the reboot)"
 
 echo ">> I2C at $BAUD Hz"
 sudo raspi-config nonint do_i2c 0
