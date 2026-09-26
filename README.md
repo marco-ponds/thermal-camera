@@ -11,7 +11,9 @@ It boots straight into the camera: no desktop, no keyboard, no mouse cursor.
 | ![Settings](docs/05-settings.png) | ![Sensor info](docs/06-sensor-info.png) |
 
 The UI follows the `thermal-cam-ui` design package (SPEC.md plus mockups). For how the software is built,
-see **[HOW_IT_WORKS.md](HOW_IT_WORKS.md)**.
+see **[HOW_IT_WORKS.md](HOW_IT_WORKS.md)**. For a printable (e-ink friendly) wiring and setup guide, see
+**[docs/Thermal_Camera_Wiring_and_Setup_Guide.pdf](docs/Thermal_Camera_Wiring_and_Setup_Guide.pdf)**; it's built by
+`docs/guide/build_guide.py` (`pip install reportlab pillow`), so edit the script rather than the PDF.
 
 ---
 

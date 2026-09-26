@@ -8,3 +8,4 @@ adafruit-circuitpython-mlx90640==1.3.9
 adafruit-python-shell
 click
 # Development only (off-device tests):  pip install pytest && python -m pytest tests/
+# Rebuilding the PDF guide:            pip install reportlab pillow && python3 docs/guide/build_guide.py
