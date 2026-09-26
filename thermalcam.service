@@ -9,6 +9,9 @@ User=__USER__
 SupplementaryGroups=video input i2c gpio
 WorkingDirectory=__DIR__
 Environment=PYTHONUNBUFFERED=1
+# Stop the kernel text console drawing on the PiTFT (boot/cloud-init/getty
+# messages would otherwise paint over the app). '+' runs this step as root.
+ExecStartPre=+/bin/sh -c 'for v in /sys/class/vtconsole/vtcon*; do grep -q "frame buffer" "$$v/name" && echo 0 > "$$v/bind"; done; true'
 ExecStart=__DIR__/.venv/bin/python __DIR__/main.py
 Restart=always
 RestartSec=3
